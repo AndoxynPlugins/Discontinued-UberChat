@@ -1,6 +1,6 @@
 name: UberChat
 main: net.daboross.bukkitdev.uberchat.UberChat
-version: 2.4
+version: 1.0.0
 author: Dabo Ross
 description: Smart Chat Handler
 commands:
