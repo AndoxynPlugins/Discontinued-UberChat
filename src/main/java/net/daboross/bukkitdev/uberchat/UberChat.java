@@ -32,44 +32,49 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public final class UberChat extends JavaPlugin {
 
-    @Override
-    public void onEnable() {
-        registerEvents();
-        assignCommands();
-        getLogger().info("UberChat Fully Enabled");
-    }
+	private ChatChecker chatChecker;
+	private MessageHandler messageHandler;
 
-    @Override
-    public void onDisable() {
-        getLogger().info("UberChat Fully Disabled");
-    }
+	@Override
+	public void onEnable() {
+		chatChecker = new ChatChecker();
+		messageHandler = new MessageHandler(chatChecker);
+		registerEvents();
+		assignCommands();
+		getLogger().info("UberChat Fully Enabled");
+	}
 
-    private void registerEvents() {
-        PluginManager pm = this.getServer().getPluginManager();
-        UberChatListener uberChatListener = new UberChatListener();
-        pm.registerEvents(uberChatListener, this);
-    }
+	@Override
+	public void onDisable() {
+		getLogger().info("UberChat Fully Disabled");
+	}
 
-    private void assignCommands() {
-        PluginCommand colorize = getCommand("colorize");
-        if (colorize != null) {
-            colorize.setExecutor(new ColorizorExecutor());
-        }
-        PluginCommand me = getCommand("me");
-        if (me != null) {
-            me.setExecutor(new MeExecutor());
-        }
-        PluginCommand msg = getCommand("msg");
-        if (msg != null) {
-            msg.setExecutor(new MsgExecutor());
-        }
-        PluginCommand reply = getCommand("reply");
-        if (reply != null) {
-            reply.setExecutor(new ReplyExecutor());
-        }
-        PluginCommand shout = getCommand("shout");
-        if (shout != null) {
-            shout.setExecutor(new ShoutExecutor());
-        }
-    }
+	private void registerEvents() {
+		PluginManager pm = this.getServer().getPluginManager();
+		UberChatListener uberChatListener = new UberChatListener(chatChecker);
+		pm.registerEvents(uberChatListener, this);
+	}
+
+	private void assignCommands() {
+		PluginCommand colorize = getCommand("colorize");
+		if (colorize != null) {
+			colorize.setExecutor(new ColorizorExecutor());
+		}
+		PluginCommand me = getCommand("me");
+		if (me != null) {
+			me.setExecutor(new MeExecutor(chatChecker));
+		}
+		PluginCommand msg = getCommand("msg");
+		if (msg != null) {
+			msg.setExecutor(new MsgExecutor(messageHandler));
+		}
+		PluginCommand reply = getCommand("reply");
+		if (reply != null) {
+			reply.setExecutor(new ReplyExecutor(messageHandler));
+		}
+		PluginCommand shout = getCommand("shout");
+		if (shout != null) {
+			shout.setExecutor(new ShoutExecutor(chatChecker));
+		}
+	}
 }

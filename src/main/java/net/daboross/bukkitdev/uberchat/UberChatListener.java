@@ -30,34 +30,40 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
  */
 public class UberChatListener implements Listener {
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onPlayerChatEvent(AsyncPlayerChatEvent apce) {
-        format(apce);
-        if (!checkForBack(apce)) {
-            apce.setMessage(UberChatSensor.getSensoredMessage(apce.getMessage(), apce.getPlayer()));
-        }
-    }
+	private final ChatChecker chatChecker;
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onPlayerChatEventHigh(AsyncPlayerChatEvent apce) {
-        UberChatHelpers.formatPlayerDisplayname(apce.getPlayer());
-    }
+	public UberChatListener(ChatChecker chatChecker) {
+		this.chatChecker = chatChecker;
+	}
 
-    private void format(AsyncPlayerChatEvent evt) {
-        evt.setFormat(UberChatStatics.FORMAT.CHAT);
-    }
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+	public void onPlayerChatEvent(AsyncPlayerChatEvent apce) {
+		format(apce);
+		if (!checkForBack(apce)) {
+			apce.setMessage(chatChecker.check(apce.getMessage(), apce.getPlayer()));
+		}
+	}
 
-    private boolean checkForBack(AsyncPlayerChatEvent evt) {
-        String msg = evt.getMessage().replaceAll("(?i)&[0-9A-FLMO]", "").trim().toLowerCase(Locale.ENGLISH);
-        if (msg.equals("back") || msg.equals("im back") || msg.equals("i'm back")) {
-            String fullDisplay = evt.getPlayer().getDisplayName();
-            String[] nameSplit = fullDisplay.split(" ");
-            String name = nameSplit[nameSplit.length - 1];
-            Bukkit.getServer().broadcastMessage(String.format(UberChatStatics.FORMAT.ANNOUNCER, "UC") + ChatColor.BLUE + name + ChatColor.GRAY + " Is Back" + ChatColor.DARK_GRAY + "!");
-            evt.setCancelled(true);
-            return true;
-        } else {
-            return false;
-        }
-    }
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onPlayerChatEventHigh(AsyncPlayerChatEvent apce) {
+		UberChatHelpers.formatPlayerDisplayname(apce.getPlayer());
+	}
+
+	private void format(AsyncPlayerChatEvent evt) {
+		evt.setFormat(UberChatStatics.FORMAT.CHAT);
+	}
+
+	private boolean checkForBack(AsyncPlayerChatEvent evt) {
+		String msg = evt.getMessage().replaceAll("(?i)&[0-9A-FLMO]", "").trim().toLowerCase(Locale.ENGLISH);
+		if (msg.equals("back") || msg.equals("im back") || msg.equals("i'm back")) {
+			String fullDisplay = evt.getPlayer().getDisplayName();
+			String[] nameSplit = fullDisplay.split(" ");
+			String name = nameSplit[nameSplit.length - 1];
+			Bukkit.getServer().broadcastMessage(String.format(UberChatStatics.FORMAT.ANNOUNCER, "UC") + ChatColor.BLUE + name + ChatColor.GRAY + " Is Back" + ChatColor.DARK_GRAY + "!");
+			evt.setCancelled(true);
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

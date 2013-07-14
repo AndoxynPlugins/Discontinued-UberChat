@@ -17,7 +17,7 @@
 package net.daboross.bukkitdev.uberchat.commandexecutors;
 
 import net.daboross.bukkitdev.uberchat.UberChatHelpers;
-import net.daboross.bukkitdev.uberchat.UberChatSensor;
+import net.daboross.bukkitdev.uberchat.ChatChecker;
 import net.daboross.bukkitdev.uberchat.UberChatStatics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -31,16 +31,22 @@ import org.bukkit.entity.Player;
  */
 public class ShoutExecutor implements CommandExecutor {
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (args.length == 0) {
-            sender.sendMessage(UberChatStatics.COLOR.MAIN + "Please specify a message");
-            sender.sendMessage(UberChatStatics.COLOR.MAIN + "Usage: /" + label + " <message> (shouts <message>)");
-        } else {
-            Bukkit.broadcastMessage(String.format(UberChatStatics.FORMAT.SHOUT,
-                    sender instanceof Player ? ((Player) sender).getDisplayName() : "Server",
-                    UberChatSensor.getSensoredMessage(UberChatHelpers.arrayToString(args, " "), sender)));
-        }
-        return true;
-    }
+	private final ChatChecker chatChecker;
+
+	public ShoutExecutor(ChatChecker chatChecker) {
+		this.chatChecker = chatChecker;
+	}
+
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		if (args.length == 0) {
+			sender.sendMessage(UberChatStatics.COLOR.MAIN + "Please specify a message");
+			sender.sendMessage(UberChatStatics.COLOR.MAIN + "Usage: /" + label + " <message> (shouts <message>)");
+		} else {
+			Bukkit.broadcastMessage(String.format(UberChatStatics.FORMAT.SHOUT,
+					sender instanceof Player ? ((Player) sender).getDisplayName() : "Server",
+					chatChecker.check(UberChatHelpers.arrayToString(args, " "), sender)));
+		}
+		return true;
+	}
 }
