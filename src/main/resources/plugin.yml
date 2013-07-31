@@ -1,8 +1,8 @@
-name: UberChat
-main: net.daboross.bukkitdev.uberchat.UberChat
-version: 1.0.0
+name: ${project.name}
+main: net.daboross.bukkitdev.uberchat.UberChatPlugin
+version: ${project.version}
 author: Dabo Ross
-description: Smart Chat Handler
+description: Smart chat handler
 commands:
    colorize:
      description: Toggles colorizing all messages.
