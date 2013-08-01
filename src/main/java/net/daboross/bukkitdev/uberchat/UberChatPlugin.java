@@ -44,17 +44,19 @@ public final class UberChatPlugin extends JavaPlugin {
         messageHandler = new MessageHandler(chatChecker);
         registerEvents();
         assignCommands();
+        MetricsLite metrics = null;
         try {
-            new MetricsLite(this).start();
+            metrics = new MetricsLite(this);
         } catch (IOException ex) {
-            getLogger().log(Level.WARNING, "Unable to create metrics");
+            getLogger().log(Level.WARNING, "Unable to create Metrics", ex);
         }
-        getLogger().info("UberChat Fully Enabled");
+        if (metrics != null) {
+            metrics.start();
+        }
     }
 
     @Override
     public void onDisable() {
-        getLogger().info("UberChat Fully Disabled");
     }
 
     private void registerEvents() {
