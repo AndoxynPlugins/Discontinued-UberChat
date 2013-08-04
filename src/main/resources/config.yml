@@ -1,0 +1,14 @@
+# Super simple chat-format. First %s is name, second %s is message. & color codes work.
+chat-format: '&0#&b%s&7 %s'
+swear-words:
+- fuck
+- nigger
+- bitch
+- shit
+- crap
+- fag
+- dick
+- cunt
+- cock
+word-only-swear-words:
+- ass

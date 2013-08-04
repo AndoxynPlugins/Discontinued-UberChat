@@ -29,51 +29,51 @@ import org.bukkit.ChatColor;
  */
 public class SwearChecker {
 
-	private static final String ANYWHERE_FORMAT = "(?i)%s";
-	private static final String WORDONLY_FORMAT = "(?i)(^|[^a-zA-Z])%s([^a-zA-Z]|$)";
-	private static final Pattern COLOR_PATTERN = Pattern.compile("(?i).*" + ChatColor.COLOR_CHAR + "[0-9A-FK-OR].*");
-	private final Map<Pattern, String> swearRegex;
+    private static final String ANYWHERE_FORMAT = "(?i)%s";
+    private static final String WORDONLY_FORMAT = "(?i)(^|[^a-zA-Z])%s([^a-zA-Z]|$)";
+    private static final Pattern COLOR_PATTERN = Pattern.compile("(?i).*" + ChatColor.COLOR_CHAR + "[0-9A-FK-OR].*");
+    private final Map<Pattern, String> swearRegex;
 
-	public SwearChecker() {
-		this.swearRegex = new HashMap<Pattern, String>();
-	}
+    public SwearChecker() {
+        this.swearRegex = new HashMap<Pattern, String>();
+    }
 
-	public SwearChecker(Map<Pattern, String> swearRegex) {
-		this.swearRegex = new HashMap<Pattern, String>(swearRegex);
-	}
+    public SwearChecker(Map<Pattern, String> swearRegex) {
+        this.swearRegex = new HashMap<Pattern, String>(swearRegex);
+    }
 
-	public void addAnwhereSwearWord(String swear) {
-		swearRegex.put(Pattern.compile(String.format(ANYWHERE_FORMAT, swear)), fillString(swear.length(), '*'));
-	}
+    public void addAnwhereSwearWord(String swear) {
+        swearRegex.put(Pattern.compile(String.format(ANYWHERE_FORMAT, swear)), fillString(swear.length(), '*'));
+    }
 
-	public void addWordOnlySwearWord(String swear) {
-		swearRegex.put(Pattern.compile(String.format(WORDONLY_FORMAT, swear)), fillString(swear.length(), '*'));
-	}
+    public void addWordOnlySwearWord(String swear) {
+        swearRegex.put(Pattern.compile(String.format(WORDONLY_FORMAT, swear)), fillString(swear.length(), '*'));
+    }
 
-	public String check(String input) {
-		String result = input;
-		boolean resultNonColor = COLOR_PATTERN.matcher(input).matches();
-		for (Map.Entry<Pattern, String> swearEntry : swearRegex.entrySet()) {
-			result = swearEntry.getKey().matcher(result).replaceAll(swearEntry.getValue());
-			if (!resultNonColor) {
-				String noColorMessage = ChatColor.stripColor(result);
-				if (noColorMessage.equals(result)) {
-					resultNonColor = true;
-				} else {
-					Matcher matcher = swearEntry.getKey().matcher(noColorMessage);
-					if (matcher.find()) {
-						result = matcher.replaceAll(swearEntry.getValue());
-						resultNonColor = true;
-					}
-				}
-			}
-		}
-		return result;
-	}
+    public String check(String input) {
+        String result = input;
+        boolean resultNonColor = COLOR_PATTERN.matcher(input).matches();
+        for (Map.Entry<Pattern, String> swearEntry : swearRegex.entrySet()) {
+            result = swearEntry.getKey().matcher(result).replaceAll(swearEntry.getValue());
+            if (!resultNonColor) {
+                String noColorMessage = ChatColor.stripColor(result);
+                if (noColorMessage.equals(result)) {
+                    resultNonColor = true;
+                } else {
+                    Matcher matcher = swearEntry.getKey().matcher(noColorMessage);
+                    if (matcher.find()) {
+                        result = matcher.replaceAll(swearEntry.getValue());
+                        resultNonColor = true;
+                    }
+                }
+            }
+        }
+        return result;
+    }
 
-	private static String fillString(int length, char filler) {
-		char[] array = new char[length];
-		Arrays.fill(array, filler);
-		return String.valueOf(array);
-	}
+    private static String fillString(int length, char filler) {
+        char[] array = new char[length];
+        Arrays.fill(array, filler);
+        return String.valueOf(array);
+    }
 }

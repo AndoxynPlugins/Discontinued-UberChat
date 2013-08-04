@@ -37,10 +37,13 @@ public final class UberChatPlugin extends JavaPlugin {
 
     private ChatChecker chatChecker;
     private MessageHandler messageHandler;
+    private UberChatConfig config;
 
     @Override
     public void onEnable() {
-        chatChecker = new ChatChecker();
+        saveDefaultConfig();
+        config = new UberChatConfig(this);
+        chatChecker = new ChatChecker(config);
         messageHandler = new MessageHandler(chatChecker);
         registerEvents();
         assignCommands();
@@ -61,7 +64,7 @@ public final class UberChatPlugin extends JavaPlugin {
 
     private void registerEvents() {
         PluginManager pm = this.getServer().getPluginManager();
-        UberChatListener uberChatListener = new UberChatListener(chatChecker);
+        UberChatListener uberChatListener = new UberChatListener(chatChecker, config);
         pm.registerEvents(uberChatListener, this);
     }
 

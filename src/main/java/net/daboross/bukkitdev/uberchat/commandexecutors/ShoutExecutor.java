@@ -31,22 +31,22 @@ import org.bukkit.entity.Player;
  */
 public class ShoutExecutor implements CommandExecutor {
 
-	private final ChatChecker chatChecker;
+    private final ChatChecker chatChecker;
 
-	public ShoutExecutor(ChatChecker chatChecker) {
-		this.chatChecker = chatChecker;
-	}
+    public ShoutExecutor(ChatChecker chatChecker) {
+        this.chatChecker = chatChecker;
+    }
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (args.length == 0) {
-			sender.sendMessage(UberChatStatics.COLOR.MAIN + "Please specify a message");
-			sender.sendMessage(UberChatStatics.COLOR.MAIN + "Usage: /" + label + " <message> (shouts <message>)");
-		} else {
-			Bukkit.broadcastMessage(String.format(UberChatStatics.FORMAT.SHOUT,
-					sender instanceof Player ? ((Player) sender).getDisplayName() : "Server",
-					chatChecker.check(UberChatHelpers.arrayToString(args, " "), sender)));
-		}
-		return true;
-	}
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (args.length == 0) {
+            sender.sendMessage(UberChatStatics.COLOR.MAIN + "Please specify a message");
+            sender.sendMessage(UberChatStatics.COLOR.MAIN + "Usage: /" + label + " <message> (shouts <message>)");
+        } else {
+            Bukkit.broadcastMessage(String.format(UberChatStatics.FORMAT.SHOUT,
+                    sender instanceof Player ? ((Player) sender).getDisplayName() : "Server",
+                    chatChecker.check(UberChatHelpers.arrayToString(args, " "), sender)));
+        }
+        return true;
+    }
 }

@@ -32,27 +32,27 @@ import org.bukkit.command.CommandSender;
  */
 public class ReplyExecutor implements CommandExecutor {
 
-	private MessageHandler messageHandler;
+    private MessageHandler messageHandler;
 
-	public ReplyExecutor(MessageHandler messageHandler) {
-		this.messageHandler = messageHandler;
-	}
+    public ReplyExecutor(MessageHandler messageHandler) {
+        this.messageHandler = messageHandler;
+    }
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (args.length == 0) {
-			sender.sendMessage(UberChatStatics.COLOR.MAIN + "Please specify a message to send.");
-			sender.sendMessage(UberChatStatics.COLOR.MAIN + "Usage: /" + label + " <message> (Sends <message> to the last person who messaged you.)");
-		} else {
-			String replyToName = PlayerInfoTracker.getReplyto(sender.getName());
-			CommandSender replyTo = replyToName == null ? null : UberChatUserFinder.findCommandSenderExact(replyToName);
-			if (replyTo == null) {
-				sender.sendMessage(UberChatStatics.COLOR.MAIN + "No user found to reply to.");
-			} else {
-				String message = UberChatHelpers.arrayToString(args, " ");
-				messageHandler.sendMessage(sender, replyTo, message);
-			}
-		}
-		return true;
-	}
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (args.length == 0) {
+            sender.sendMessage(UberChatStatics.COLOR.MAIN + "Please specify a message to send.");
+            sender.sendMessage(UberChatStatics.COLOR.MAIN + "Usage: /" + label + " <message> (Sends <message> to the last person who messaged you.)");
+        } else {
+            String replyToName = PlayerInfoTracker.getReplyto(sender.getName());
+            CommandSender replyTo = replyToName == null ? null : UberChatUserFinder.findCommandSenderExact(replyToName);
+            if (replyTo == null) {
+                sender.sendMessage(UberChatStatics.COLOR.MAIN + "No user found to reply to.");
+            } else {
+                String message = UberChatHelpers.arrayToString(args, " ");
+                messageHandler.sendMessage(sender, replyTo, message);
+            }
+        }
+        return true;
+    }
 }
